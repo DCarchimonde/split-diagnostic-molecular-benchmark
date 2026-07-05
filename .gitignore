@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Raw data and model artifacts
+paper1_leakage_benchmark/data/raw/*
+paper1_leakage_benchmark/data/processed/*
+paper1_leakage_benchmark/results/models/*
+*.pt
+*.pth
+*.ckpt
+*.joblib
+*.pkl
+
+# Keep small reproducibility outputs
+!paper1_leakage_benchmark/results/tables/*.csv
+!paper1_leakage_benchmark/figures/*.png
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+paper1_latex/main.pdf
+
+# Temporary files
+*.tmp
+~$*
