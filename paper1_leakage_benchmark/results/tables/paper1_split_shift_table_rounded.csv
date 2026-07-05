@@ -1,0 +1,15 @@
+dataset,split_type,mean_abs_target_gap
+BACE,split_random,0.0016
+BACE,split_scaffold,0.1854
+BBBP,split_random,0.0006
+BBBP,split_scaffold,0.1274
+ClinTox,split_random,0.0015
+ClinTox,split_scaffold,0.0595
+ESOL,split_random,0.0633
+ESOL,split_scaffold,1.5734
+BACE,balanced_scaffold,0.0007
+BBBP,balanced_scaffold,0.0024
+ClinTox,balanced_scaffold,0.0022
+ESOL,balanced_scaffold,0.0535
+FreeSolv,balanced_scaffold,1.226
+HIV,balanced_scaffold,0.0029

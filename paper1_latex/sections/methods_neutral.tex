@@ -1,0 +1,51 @@
+\section{Materials and Methods}
+
+\subsection{Datasets and preprocessing}
+
+Six public molecular property datasets were used, covering both classification and regression tasks. The classification datasets were BBBP, BACE, ClinTox, and HIV; the regression datasets were ESOL and FreeSolv. This selection was intended to include datasets with different sizes, task types, imbalance levels, and property ranges rather than to exhaustively cover all AIDD benchmark settings.
+
+Preprocessing was kept deliberately simple and reproducible. Molecules with missing targets were removed, SMILES strings were checked and canonicalized using RDKit \citep{rdkit}, invalid molecules were discarded, and duplicate canonical SMILES were removed. Table~\ref{tab:dataset-summary} summarizes the resulting datasets after preprocessing. For classification tasks, the target mean corresponds to the positive-label fraction; for regression tasks, it corresponds to the mean property value.
+
+\begin{table}[H]
+\centering
+\caption{Dataset summary after preprocessing. For classification datasets, target mean corresponds to the positive-label fraction.}
+\label{tab:dataset-summary}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrrrr}
+\toprule
+Dataset & Task & Raw & DropNA & Valid SMILES & Dedup & Duplicates & Target mean & Target range \\
+\midrule
+BBBP & Classification & 2050 & 2050 & 2039 & 1975 & 64 & 0.7600 & 0.00--1.00 \\
+BACE & Classification & 1513 & 1513 & 1513 & 1513 & 0 & 0.4567 & 0.00--1.00 \\
+ClinTox & Classification & 1484 & 1484 & 1480 & 1461 & 19 & 0.0705 & 0.00--1.00 \\
+HIV & Classification & 41127 & 41127 & 41120 & 41120 & 0 & 0.0351 & 0.00--1.00 \\
+ESOL & Regression & 1128 & 1128 & 1128 & 1117 & 11 & -3.0503 & -11.60--1.58 \\
+FreeSolv & Regression & 642 & 642 & 642 & 642 & 0 & -3.8030 & -25.47--3.43 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Molecular representation}
+
+Each molecule was represented using an extended-connectivity/Morgan fingerprint with radius 2 and 2048 bits \citep{rogers2010extended}. The same representation was used across all datasets, models, and split protocols. This design choice reduces feature-engineering variability so that the analysis focuses on how split protocols affect benchmark interpretation.
+
+\subsection{Splitting protocols}
+
+Three split protocols were compared.
+
+\textbf{Random split.} Molecules were divided into training and test sets using random splitting repeated over five seeds. Classification splits were stratified when applicable, so that random-split target prevalence remained close across train and test sets.
+
+\textbf{Ordinary scaffold split.} Molecules were grouped according to Bemis--Murcko scaffolds \citep{bemis1996properties}. Scaffold groups were assigned to training or test sets so that no scaffold appeared in both sets. This split represents the common benchmark strategy for testing scaffold-level generalization.
+
+\textbf{Target-balanced scaffold split.} Scaffold groups were selected to preserve train/test scaffold separation while reducing the train/test target mean difference. This protocol is used as a diagnostic counterfactual, not as a universal split standard. It helps test whether a performance gap remains after reducing one major confounder of ordinary scaffold splitting, namely target distribution shift.
+
+\subsection{Models and metrics}
+
+For classification tasks, Logistic Regression, Random Forest, and XGBoost were evaluated. Logistic Regression and Random Forest were implemented using scikit-learn \citep{pedregosa2011scikit}; Random Forest is included as a robust nonlinear classical baseline \citep{breiman2001random}. XGBoost was implemented using the XGBoost library \citep{chen2016xgboost}. ROC-AUC was used as the primary classification metric, with accuracy, F1, and average precision retained as supporting metrics. For regression tasks, Ridge Regression, Random Forest, and XGBoost were evaluated. RMSE was used as the primary regression metric, with MAE and $R^2$ retained as supporting metrics.
+
+The generalization gap was defined so that positive values indicate worse performance under a scaffold-based split than under a random split. For classification, the gap is random ROC-AUC minus scaffold ROC-AUC. For regression, the gap is scaffold RMSE minus random RMSE.
+
+\subsection{Split diagnostics}
+
+Model scores were interpreted together with split diagnostics. The diagnostics included train/test target mean gaps, number of scaffolds, largest scaffold fraction, singleton scaffold fraction, train/test shared scaffold count, and maximum test-to-train Tanimoto similarity. For each test molecule, the maximum Tanimoto similarity to any training molecule was calculated using Morgan fingerprints. Outlier cases and model-ranking changes were also analyzed to determine whether split choice changes not only absolute performance but also model comparison.

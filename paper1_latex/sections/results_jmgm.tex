@@ -1,0 +1,51 @@
+\section{Results}
+
+The results are organized as a split-diagnostic story rather than as a simple model leaderboard. Figure~\ref{fig:workflow} summarizes the full audit: public molecular property datasets are featurized consistently, evaluated under three split protocols, and interpreted through target-shift, scaffold, chemical-similarity, performance-gap, and ranking-stability diagnostics.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figure1_split_diagnostic_workflow.png}
+\caption{Overview of the split-diagnostic audit. (A) Molecular property datasets are standardized, featurized, split, modelled, and interpreted through a diagnostic workflow. (B) The benchmark spans classification and regression datasets of different sizes. (C) Each split is audited through target-shift, scaffold, chemical-similarity, and model-stability diagnostics. (D) Random, ordinary scaffold, and target-balanced scaffold splits emphasize different benchmark questions rather than forming a single universal ranking of difficulty.}
+\label{fig:workflow}
+\end{figure}
+
+\subsection{Scaffold separation alone does not guarantee a clean benchmark split}
+
+Ordinary scaffold splitting successfully removes direct train/test scaffold overlap across the tested datasets, but it can also produce target distribution shifts and scaffold concentration. This distinction is central to the manuscript. A split can be chemically non-overlapping and still be statistically difficult to interpret. ESOL and FreeSolv illustrate this problem most clearly: ordinary scaffold splitting holds out very few scaffold groups and produces large target mean gaps. Target-balanced scaffold splitting reduces this problem in several datasets, but FreeSolv remains constrained by small dataset size and a dominant scaffold group.
+
+Figure~\ref{fig:target-shift} makes this confounder visible. Random splits have small target gaps because they distribute molecules without scaffold-level constraints and use stratification where applicable. Ordinary scaffold splits can be much more shifted because entire scaffold groups are held out. Target-balanced scaffold splitting often reduces the gap, but cannot always overcome strong scaffold concentration.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth]{figure3_target_shift.png}
+\caption{Target distribution shift under random, ordinary scaffold, and target-balanced scaffold splitting. Target-balanced scaffold splitting reduces target mean gaps in several datasets, but small or scaffold-concentrated datasets can remain constrained.}
+\label{fig:target-shift}
+\end{figure}
+
+\subsection{Performance gaps shrink in some datasets after target balancing, but not universally}
+
+Figure~\ref{fig:gap} summarizes the primary generalization-gap result. In several datasets, especially ESOL for tree-based models, the gap between random and ordinary scaffold evaluation decreases after target balancing. This suggests that part of the ordinary scaffold gap can be associated with target shift rather than scaffold separation alone. However, this pattern is not universal. In HIV, balanced scaffold gaps are larger than ordinary scaffold gaps across models, and in FreeSolv different models respond differently to balancing. The important result is therefore not that one split is always preferable, but that split diagnostics change how benchmark scores should be interpreted.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figure2_generalization_gap.png}
+\caption{Generalization gap under ordinary scaffold and target-balanced scaffold splitting. Classification gaps are random ROC-AUC minus scaffold ROC-AUC. Regression gaps are scaffold RMSE minus random RMSE. Positive values indicate worse performance under the scaffold-based split than under the random split.}
+\label{fig:gap}
+\end{figure}
+
+\subsection{Random splits are chemically closer to the training set}
+
+Figure~\ref{fig:tanimoto} shows that random split test molecules generally have higher maximum Tanimoto similarity to training molecules than scaffold-based test molecules. This supports the interpretation that random-split performance can reflect interpolation-like evaluation. Ordinary scaffold splitting usually produces lower test-to-train similarity, while target-balanced scaffold splitting often lies between random and ordinary scaffold splitting. This intermediate behavior is useful diagnostically because it separates, at least partially, target-shift control from maximal chemical dissimilarity.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth]{figure4_tanimoto_similarity.png}
+\caption{Mean maximum test-to-train Tanimoto similarity by split strategy. Random splits generally place test molecules closer to the training set than scaffold-based splits, making aggregate random-split scores difficult to interpret as scaffold-level generalization.}
+\label{fig:tanimoto}
+\end{figure}
+
+\subsection{Split diagnostics change model comparison}
+
+The appendix ranking analysis shows that split choice can change not only absolute performance estimates but also which model appears best. This matters because benchmark papers often use model rankings to support claims about method superiority. If the best-performing model changes when the split changes, then a leaderboard-style conclusion is incomplete without split diagnostics.
+
+Overall, the results support the central story of this paper. Random splitting often produces chemically closer test sets. Ordinary scaffold splitting removes scaffold overlap but can introduce target shift and scaffold concentration. Target-balanced scaffold splitting helps separate target-shift effects from scaffold-generalization effects, but does not eliminate all dataset- and model-dependent behavior. Therefore, molecular property prediction benchmarks should report the properties of the split alongside model scores. Full numerical values are retained in the generated result tables and appendix materials to preserve reproducibility.

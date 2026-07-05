@@ -1,0 +1,19 @@
+dataset,task_type,split,mean_max_tanimoto,median_max_tanimoto,p90_max_tanimoto,p95_max_tanimoto,frac_test_ge_0_7,frac_test_ge_0_8,frac_test_ge_0_9,split_label
+BACE,classification,balanced_scaffold,0.73,0.735,0.824,0.843,0.671,0.181,0.008,balanced scaffold
+BACE,classification,ordinary_scaffold,0.733,0.74,0.834,0.853,0.696,0.199,0.007,ordinary scaffold
+BACE,classification,random,0.791,0.807,0.911,0.947,0.852,0.538,0.123,random
+BBBP,classification,balanced_scaffold,0.458,0.436,0.677,0.719,0.065,0.009,0.002,balanced scaffold
+BBBP,classification,ordinary_scaffold,0.409,0.403,0.66,0.692,0.039,0.0,0.0,ordinary scaffold
+BBBP,classification,random,0.564,0.57,0.793,0.853,0.277,0.096,0.029,random
+ClinTox,classification,balanced_scaffold,0.433,0.409,0.64,0.69,0.045,0.008,0.003,balanced scaffold
+ClinTox,classification,ordinary_scaffold,0.33,0.305,0.556,0.638,0.013,0.007,0.003,ordinary scaffold
+ClinTox,classification,random,0.516,0.493,0.797,0.909,0.235,0.098,0.053,random
+ESOL,regression,balanced_scaffold,0.422,0.388,0.63,0.724,0.051,0.033,0.021,balanced scaffold
+ESOL,regression,ordinary_scaffold,0.251,0.24,0.359,0.4,0.0,0.0,0.0,ordinary scaffold
+ESOL,regression,random,0.556,0.548,0.817,0.97,0.199,0.11,0.068,random
+FreeSolv,regression,balanced_scaffold,0.384,0.37,0.5,0.532,0.007,0.0,0.0,balanced scaffold
+FreeSolv,regression,ordinary_scaffold,0.228,0.222,0.32,0.37,0.0,0.0,0.0,ordinary scaffold
+FreeSolv,regression,random,0.544,0.522,0.827,0.959,0.164,0.113,0.084,random
+HIV,classification,balanced_scaffold,0.535,0.519,0.722,0.78,0.129,0.04,0.007,balanced scaffold
+HIV,classification,ordinary_scaffold,0.478,0.466,0.68,0.735,0.08,0.022,0.002,ordinary scaffold
+HIV,classification,random,0.616,0.63,0.833,0.888,0.358,0.155,0.044,random

@@ -1,0 +1,17 @@
+\section{Related Work}
+
+\subsection{Molecular property prediction benchmarks}
+
+Public benchmarks have become essential infrastructure for molecular machine learning. MoleculeNet brought together diverse molecular property prediction datasets and encouraged standardized comparisons across models, representations, and metrics \citep{wu2018moleculenet}. TDC further expanded this benchmark ecosystem by organizing therapeutics datasets into tasks and evaluation settings that better reflect drug discovery and development workflows \citep{huang2021tdc}. These resources have made molecular machine-learning studies more comparable, but they also make one issue more visible: benchmark conclusions depend not only on datasets and models, but also on the split protocol used to define generalization.
+
+\subsection{Random and scaffold splitting}
+
+Random splitting is simple and statistically convenient, but it can place structurally similar molecules in both training and test sets. In molecular property prediction, such similarity can inflate apparent generalization because the test set may contain near-neighbors of training compounds. Scaffold splitting was introduced into benchmark practice as a stricter alternative, motivated by the idea that generalizing to unseen molecular frameworks is closer to the challenge faced in medicinal chemistry. The molecular framework concept underlying scaffold grouping is related to Bemis--Murcko scaffolds \citep{bemis1996properties}.
+
+However, scaffold splitting does not eliminate all evaluation concerns. A scaffold split can still contain chemically similar molecules across different scaffolds, and recent work has argued that scaffold splits may overestimate virtual screening performance when scaffold dissimilarity does not fully capture chemical dissimilarity \citep{guo2024scaffold}. In addition, scaffold splitting may introduce target distribution shift if held-out scaffold groups have systematically different labels or property values. This means that a scaffold split can be simultaneously chemically non-overlapping and statistically confounded.
+
+\subsection{Imbalance, distribution shift, and diagnostic evaluation}
+
+Many AIDD datasets are imbalanced or distributionally uneven. Imbalanced benchmark studies such as ImDrug emphasize that class imbalance can distort model interpretation and metric choice in AI-aided drug discovery \citep{li2022imdrug}. Similar concerns apply to split-induced target shift: if train and test sets differ in label prevalence or property ranges, a performance difference may not be attributable to chemical generalization alone. This motivates diagnostic evaluation beyond a single performance number.
+
+The present study follows this diagnostic view. Rather than treating random and scaffold splits as fixed benchmark choices, we measure how split protocols change target distributions, scaffold composition, chemical similarity, model performance gaps, and model rankings. This positioning is intentionally different from a model leaderboard paper. The goal is not to show that one model is best, but to show that split-induced artifacts can change how benchmark results should be interpreted.

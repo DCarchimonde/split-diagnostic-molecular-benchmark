@@ -1,0 +1,15 @@
+dataset,split_type,mean_abs_target_gap
+BACE,split_random,0.0015792488339743
+BACE,split_scaffold,0.1853539537880879
+BBBP,split_random,0.000632911392405
+BBBP,split_scaffold,0.1274292838775033
+ClinTox,split_random,0.0014668754967506
+ClinTox,split_scaffold,0.0595028067361668
+ESOL,split_random,0.0632521496560549
+ESOL,split_scaffold,1.5734271401254765
+BACE,balanced_scaffold,0.0006528877705518589
+BBBP,balanced_scaffold,0.00242944101753836
+ClinTox,balanced_scaffold,0.0021512182657866
+ESOL,balanced_scaffold,0.05348653666074042
+FreeSolv,balanced_scaffold,1.226015306122449
+HIV,balanced_scaffold,0.00293708592063516

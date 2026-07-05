@@ -1,0 +1,30 @@
+\appendix
+
+\section{Model Ranking Stability}
+\label{app:rankings}
+
+Split choice can change not only absolute performance estimates but also model rankings. This matters because benchmark papers often use rankings to support claims about method superiority. Figure~\ref{fig:ranking-stability} summarizes the top-ranked model under each split protocol when the ranking table is available.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figureS1_model_ranking_stability.png}
+\caption{Top-ranked model by dataset and split protocol. A change in the top-ranked model across split protocols indicates that leaderboard-style conclusions can depend on the evaluation split.}
+\label{fig:ranking-stability}
+\end{figure}
+
+\section{Outlier and Sensitivity Cases}
+\label{app:outliers}
+
+Outlier and sensitivity cases were retained because they help identify dataset- and model-dependent split effects. Figure~\ref{fig:outlier-sensitivity} visualizes cases where target balancing substantially changes the observed gap.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{figureS2_outlier_sensitivity_cases.png}
+\caption{Sensitivity cases identified by the audit. Positive values indicate that the ordinary scaffold gap is reduced after target balancing, while negative values indicate that the balanced scaffold gap is larger or changes direction.}
+\label{fig:outlier-sensitivity}
+\end{figure}
+
+\section{Reproducibility Notes}
+\label{app:reproducibility}
+
+The full workflow is implemented in repository scripts. The main sequence is: data preparation, featurization, random and scaffold training, balanced scaffold training, split comparison, scaffold statistics, similarity audit, outlier inspection, figure generation, and manuscript table generation. All models use the same RDKit Morgan fingerprint representation so that the analysis focuses on split protocols rather than feature-engineering differences. Machine-readable result tables and generated figure files are retained in the repository to support reproducibility.

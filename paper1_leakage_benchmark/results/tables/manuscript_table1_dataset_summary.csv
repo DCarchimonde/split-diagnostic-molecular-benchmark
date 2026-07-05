@@ -1,0 +1,7 @@
+dataset,task_type,raw_rows,after_dropna,after_valid_smiles,after_dedup,duplicates_removed,target_mean,target_min,target_max
+BBBP,classification,2050,2050,2039,1975,64,0.76,0.0,1.0
+BACE,classification,1513,1513,1513,1513,0,0.4567,0.0,1.0
+ClinTox,classification,1484,1484,1480,1461,19,0.0705,0.0,1.0
+HIV,classification,41127,41127,41120,41120,0,0.0351,0.0,1.0
+ESOL,regression,1128,1128,1128,1117,11,-3.0503,-11.6,1.58
+FreeSolv,regression,642,642,642,642,0,-3.803,-25.47,3.43

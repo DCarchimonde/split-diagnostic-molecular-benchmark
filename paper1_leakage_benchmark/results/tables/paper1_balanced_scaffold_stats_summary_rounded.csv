@@ -1,0 +1,7 @@
+dataset,task_type,split,n_total,n_train,n_test,n_scaffolds_total,largest_scaffold_fraction,singleton_scaffold_fraction,n_train_scaffolds,n_test_scaffolds,n_shared_scaffolds,shared_scaffold_fraction_test,train_target_mean,test_target_mean,target_mean_gap_test_minus_train
+BACE,classification,balanced_scaffold,1513.0,1211.0,302.0,671.0,0.0364,0.7094,648.4,22.6,0.0,0.0,0.4569775091013126,0.4556259876470817,-0.0014
+BBBP,classification,balanced_scaffold,1975.0,1581.2,393.8,1025.0,0.0658,0.762,1002.6,22.4,0.0,0.0,0.7596759014659319,0.7612954225777554,0.0016
+ClinTox,classification,balanced_scaffold,1461.0,1169.8,291.2,784.0,0.0992,0.7793,759.2,24.8,0.0,0.0,0.07061017462491714,0.07005192746966507,-0.0006
+ESOL,regression,balanced_scaffold,1117.0,888.4,228.6,269.0,0.2829,0.7323,237.4,31.6,0.0,0.0,-3.074090779079056,-2.96788457124303,0.1062
+FreeSolv,regression,balanced_scaffold,642.0,490.0,152.0,63.0,0.4984,0.5714,62.0,1.0,0.0,0.0,-3.51273469387755,-4.73875,-1.226
+HIV,classification,balanced_scaffold,41120.0,32906.4,8213.6,19082.0,0.0508,0.7493,18774.2,307.8,0.0,0.0,0.03584109776582038,0.03209381714936799,-0.0037

@@ -1,0 +1,9 @@
+dataset,task_type,model,primary_metric,ordinary_gap_mean,ordinary_gap_std,balanced_gap_mean,balanced_gap_std,gap_reduction_after_balancing,flags
+ClinTox,classification,LogisticRegression,roc_auc,0.1191490882067112,0.0675042650063173,0.0540342940768721,0.1023186220973293,0.0651147941298391,class_imbalance_sensitive_dataset
+ClinTox,classification,RandomForest,roc_auc,0.0937442834276567,0.0519774287156282,0.0458674403898363,0.0473600900132126,0.0478768430378204,class_imbalance_sensitive_dataset
+ClinTox,classification,XGBoost,roc_auc,0.032923169267707,0.0335981380382465,0.0566520262028581,0.0478424108937388,-0.0237288569351511,class_imbalance_sensitive_dataset
+ESOL,regression,RandomForest,rmse,1.037825866109603,0.0813563327499195,0.3396632941902641,0.4609875538375875,0.6981625719193388,large_gap_change_after_balancing
+ESOL,regression,Ridge,rmse,-0.0820636996130751,0.1002534122469506,0.7933204960910544,0.3579825487553753,-0.8753841957041295,ordinary_gap_negative;large_gap_change_after_balancing;ridge_behavior_differs_from_tree_models
+ESOL,regression,XGBoost,rmse,0.9735673946393352,0.0850168521274938,0.2065113354957064,0.3912719262354477,0.7670560591436287,large_gap_change_after_balancing
+FreeSolv,regression,RandomForest,rmse,0.7371906140101192,0.2967667398526045,-0.3230207197191208,0.3005124856039565,1.06021133372924,balanced_gap_negative;large_gap_change_after_balancing
+FreeSolv,regression,XGBoost,rmse,1.0288003322500705,0.2886331315720933,0.0694296142103167,0.2935116672508837,0.9593707180397538,large_gap_change_after_balancing
