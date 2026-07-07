@@ -15,10 +15,10 @@ Preprocessing was kept deliberately simple and reproducible. Molecules with miss
 \toprule
 Dataset & Task & Raw & DropNA & Valid SMILES & Dedup & Duplicates & Target mean & Target range \\
 \midrule
-BBBP & Classification & 2050 & 2050 & 2039 & 1975 & 64 & 0.7600 & 0.00--1.00 \\
-BACE & Classification & 1513 & 1513 & 1513 & 1513 & 0 & 0.4567 & 0.00--1.00 \\
-ClinTox & Classification & 1484 & 1484 & 1480 & 1461 & 19 & 0.0705 & 0.00--1.00 \\
-HIV & Classification & 41127 & 41127 & 41120 & 41120 & 0 & 0.0351 & 0.00--1.00 \\
+BBBP & Classification & 2050 & 2050 & 2039 & 1975 & 64 & 0.7600 & $\{0,1\}$ \\
+BACE & Classification & 1513 & 1513 & 1513 & 1513 & 0 & 0.4567 & $\{0,1\}$ \\
+ClinTox & Classification & 1484 & 1484 & 1480 & 1461 & 19 & 0.0705 & $\{0,1\}$ \\
+HIV & Classification & 41127 & 41127 & 41120 & 41120 & 0 & 0.0351 & $\{0,1\}$ \\
 ESOL & Regression & 1128 & 1128 & 1128 & 1117 & 11 & -3.0503 & -11.60--1.58 \\
 FreeSolv & Regression & 642 & 642 & 642 & 642 & 0 & -3.8030 & -25.47--3.43 \\
 \bottomrule
@@ -40,9 +40,13 @@ Three split protocols were compared.
 
 \textbf{Target-balanced scaffold split.} Scaffold groups were selected to preserve train/test scaffold separation while reducing the train/test target mean difference. This protocol is used as a diagnostic counterfactual, not as a universal split standard. It helps test whether a performance gap remains after reducing one major confounder of ordinary scaffold splitting, namely target distribution shift.
 
+The ordinary scaffold split is deterministic because scaffold groups are assigned according to scaffold-group size. Therefore, variation across seeds for this split reflects model-level stochasticity rather than resampling of train/test molecules. In contrast, random and target-balanced scaffold splits include both split-sampling variation and model-level stochasticity.
+
 \subsection{Models and metrics}
 
 For classification tasks, Logistic Regression, Random Forest, and XGBoost were evaluated. Logistic Regression and Random Forest were implemented using scikit-learn \citep{pedregosa2011scikit}; Random Forest is included as a robust nonlinear classical baseline \citep{breiman2001random}. XGBoost was implemented using the XGBoost library \citep{chen2016xgboost}. ROC-AUC was used as the primary classification metric, with accuracy, F1, and average precision retained as supporting metrics. For regression tasks, Ridge Regression, Random Forest, and XGBoost were evaluated. RMSE was used as the primary regression metric, with MAE and $R^2$ retained as supporting metrics.
+
+Fixed hyperparameters were used across all split protocols and random seeds to avoid introducing additional variation from hyperparameter optimization. This design keeps the comparison focused on the effect of the data-splitting protocol.
 
 The generalization gap was defined so that positive values indicate worse performance under a scaffold-based split than under a random split. For classification, the gap is random ROC-AUC minus scaffold ROC-AUC. For regression, the gap is scaffold RMSE minus random RMSE.
 
