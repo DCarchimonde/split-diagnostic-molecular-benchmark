@@ -1,0 +1,19 @@
+\section{Background and Related Work}
+
+\subsection{Chemometric validation and sample partitioning}
+
+Chemometric validation asks whether a model can generalize to observations that were not used, directly or indirectly, during model construction. The validity of that assessment depends on the relation between calibration and test samples, the intended prediction population, and the transparency of the validation design \citep{camacho2026validation}. In QSAR and QSPR research, external validation has long been treated as essential because internal fit alone does not establish predictive usefulness \citep{tropsha2003earnest,gramatica2007principles}. Sample partitioning is therefore not a clerical preprocessing step; it defines the chemical and statistical conditions under which performance is measured.
+
+Applicability-domain research provides a complementary perspective. Predictions tend to be more reliable when test compounds remain within the chemical or descriptor space represented by the training data \citep{netzeva2005applicability,sahigara2012applicability}. A test set that is too close to the training set can overstate extrapolative performance, whereas a test set that is distant in several uncontrolled ways can confound chemical novelty with response shift or sparse coverage. Validation benefits from reporting these dimensions separately.
+
+\subsection{Partitioning in molecular property benchmarks}
+
+MoleculeNet and TDC have made molecular machine-learning studies more comparable by organizing public datasets, tasks, metrics, and common split protocols \citep{wu2018moleculenet,huang2021tdc}. Random splitting is statistically convenient and often preserves the overall target distribution, but it can place near-neighbour compounds in both training and test sets. The resulting score is informative for interpolation-like prediction, yet it may not represent transfer to a new chemical series.
+
+Scaffold splitting is widely used as a stricter alternative. Molecules are grouped by frameworks related to Bemis--Murcko scaffolds, and complete groups are assigned to one side of the partition \citep{bemis1996properties}. This prevents direct scaffold overlap, but it does not guarantee chemical dissimilarity across the partition. Recent work has shown that different scaffolds may still be chemically similar and that scaffold-based evaluation can remain optimistic for some virtual-screening settings \citep{guo2024scaffold}. Conversely, holding out complete scaffold groups can also create unusually shifted target distributions or small, concentrated test sets.
+
+\subsection{Diagnostic rather than leaderboard evaluation}
+
+Large molecular representation studies show that model rankings vary across endpoints and evaluation conditions \citep{yang2019learned,feinberg2018potentialnet}. Class imbalance further complicates interpretation in drug-discovery benchmarks \citep{li2022imdrug}. These observations motivate an evaluation design that reports how the partition changes the test problem before attributing a score difference to the model.
+
+The present study follows this diagnostic view. Random and scaffold protocols are not treated as points on a universal scale of difficulty. Instead, each partition is characterized by target shift, scaffold composition, chemical similarity, predictive gap, and ranking behaviour. A target-balanced scaffold partition is added as a controlled counterfactual to isolate the contribution of first-moment target shift while retaining scaffold disjointness.

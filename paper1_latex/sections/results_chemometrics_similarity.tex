@@ -1,0 +1,14 @@
+\subsection{Chemical proximity and scaffold composition remained distinct dimensions}
+
+Randomly partitioned test molecules generally had higher maximum Tanimoto similarity to the training set than scaffold-partitioned molecules (Figure~\ref{fig:tanimoto}). This supports an interpolation-like interpretation of random-partition performance. Ordinary scaffold partitioning reduced direct scaffold overlap and usually reduced nearest-neighbour chemical similarity, but it could simultaneously increase target shift or concentrate the test set. Target-balanced scaffold partitions often occupied an intermediate region: they preserved scaffold disjointness while reducing first-moment target shift, without necessarily matching the chemical distance of the ordinary scaffold test set.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth]{figure4_tanimoto_similarity.png}
+\caption{Mean maximum test-to-train Tanimoto similarity by partitioning strategy. Random partitions generally place test molecules closer to the training set than scaffold-based partitions. Chemical proximity and target-distribution balance should therefore be reported as separate properties of the validation design.}
+\label{fig:tanimoto}
+\end{figure}
+
+\subsection{Partition choice altered comparative model conclusions}
+
+The ranking and sensitivity analyses in the Appendix show that the top-ranked model can change with the partition. Such changes are not explained by a single direction of target balancing: some models benefit when response shift is reduced, while others perform worse because the selected chemical region changes. Leaderboard conclusions are therefore conditional on the partition and should be accompanied by diagnostics describing the test set that produced the ranking.

@@ -1,0 +1,36 @@
+\subsection{Split-diagnostic workflow}
+
+Figure~\ref{fig:workflow} summarizes the analysis. Six public molecular property datasets were standardized and featurized consistently, evaluated under three partitioning protocols, and interpreted through target-distribution, scaffold, chemical-similarity, predictive-gap, and model-ranking diagnostics. The three protocols answer different validation questions rather than defining a universal ordering of benchmark difficulty.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figure1_split_diagnostic_workflow.png}
+\caption{Overview of the split-diagnostic framework. Molecular datasets are standardized, featurized, partitioned, modelled, and interpreted through target-shift, scaffold, chemical-similarity, predictive-gap, and ranking-stability diagnostics. Random, ordinary scaffold, and target-balanced scaffold partitions emphasize different validation conditions.}
+\label{fig:workflow}
+\end{figure}
+
+\subsection{Target balancing was effective relative to random scaffold assignment}
+
+Table~\ref{tab:null-audit} compares ordinary and target-balanced scaffold partitions with the random-scaffold null distribution. In BACE, BBBP, ClinTox, ESOL, and FreeSolv, the target-balanced search reduced the mean absolute train/test target gap substantially. Across these five datasets, the achieved partitions had better target balance than approximately 91.7--97.2\% of random scaffold assignments. The smallest gain occurred in HIV, where the ordinary scaffold target gap was already only 0.0039 and the mean improvement percentile was 67.3\%. Although its Holm-adjusted signed-rank test reached $p=0.044$, the bootstrap 95\% interval for the mean target-gap reduction included zero; we therefore treat HIV as an inconclusive boundary case rather than evidence of a practically reliable reduction.
+
+\begin{table}[H]
+\centering
+\caption{Target-balance audit across 20 target-balanced seeds and 5,000 random scaffold assignments per dataset. Target gaps use the native target scale and should not be compared directly across datasets. The improvement percentile is the percentage of random scaffold assignments with worse target balance.}
+\label{tab:null-audit}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrr}
+\toprule
+Dataset & Ordinary absolute gap & Balanced absolute gap & Null median gap & Improvement percentile (\%) & Size deviation (\%) \\
+\midrule
+BACE & 0.1854 & 0.0025 & 0.0452 & 97.2 & 0.3 \\
+BBBP & 0.1274 & 0.0024 & 0.0312 & 95.8 & 0.4 \\
+ClinTox & 0.0595 & 0.0023 & 0.0165 & 91.7 & 0.2 \\
+HIV & 0.0039 & 0.0030 & 0.0040 & 67.3 & 2.0 \\
+ESOL & 1.5734 & 0.1032 & 0.8250 & 96.8 & 8.3 \\
+FreeSolv & 2.8410 & 1.2260 & 2.2691 & 94.1 & 18.8 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+The size component remained small for the four classification datasets. ESOL required a mean test-size deviation of 8.3\%, and FreeSolv required 18.8\%. FreeSolv therefore remained a structurally constrained case: balancing improved its target distribution relative to ordinary and random scaffold assignments, but the dominant scaffold structure prevented simultaneous near-exact control of test size and target mean.

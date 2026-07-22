@@ -1,0 +1,84 @@
+\section{Materials and Methods}
+
+\subsection{Datasets and preprocessing}
+
+Six public molecular property datasets were analysed: BBBP, BACE, ClinTox, and HIV for binary classification, and ESOL and FreeSolv for regression. The selection spans different sample sizes, class prevalences, property ranges, and scaffold structures rather than attempting exhaustive coverage of molecular benchmarks.
+
+Molecules with missing targets were removed. SMILES strings were parsed and canonicalized with RDKit \citep{rdkit}; invalid structures and duplicate canonical SMILES were discarded. Table~\ref{tab:dataset-summary} summarizes the processed data. For classification datasets, the target mean is the positive-label fraction. For regression datasets, it is the mean observed property value.
+
+\begin{table}[H]
+\centering
+\caption{Dataset summary after preprocessing.}
+\label{tab:dataset-summary}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrrrrr}
+\toprule
+Dataset & Task & Raw & DropNA & Valid SMILES & Deduplicated & Duplicates & Target mean & Target range \\
+\midrule
+BBBP & Classification & 2050 & 2050 & 2039 & 1975 & 64 & 0.7600 & $\{0,1\}$ \\
+BACE & Classification & 1513 & 1513 & 1513 & 1513 & 0 & 0.4567 & $\{0,1\}$ \\
+ClinTox & Classification & 1484 & 1484 & 1480 & 1461 & 19 & 0.0705 & $\{0,1\}$ \\
+HIV & Classification & 41127 & 41127 & 41120 & 41120 & 0 & 0.0351 & $\{0,1\}$ \\
+ESOL & Regression & 1128 & 1128 & 1128 & 1117 & 11 & -3.0503 & -11.60--1.58 \\
+FreeSolv & Regression & 642 & 642 & 642 & 642 & 0 & -3.8030 & -25.47--3.43 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Molecular representation and predictive models}
+
+All molecules were represented by 2048-bit Morgan fingerprints with radius 2 \citep{rogers2010extended}. A common representation was retained across datasets and partitions so that the analysis isolates partition effects rather than representation changes.
+
+For classification, the models were logistic regression, random forest, and XGBoost. Logistic regression used a sparse-compatible standardization step, the liblinear solver, balanced class weights, and a maximum of 10,000 iterations. Random forest used 300 trees and balanced class weights. XGBoost used 250 estimators, maximum depth 5, learning rate 0.05, subsample 0.8, and column subsampling 0.8. For regression, ridge regression used the same sparse-compatible standardization with $\alpha=1$, random forest used 300 trees, and XGBoost used the same tree and sampling settings with a squared-error objective. Scikit-learn and XGBoost implementations were used \citep{pedregosa2011scikit,breiman2001random,chen2016xgboost}. Hyperparameters were fixed before split comparison.
+
+ROC-AUC was the primary classification metric, with accuracy, F1, and average precision retained as supporting outputs. RMSE was the primary regression metric, with MAE and $R^2$ retained as supporting outputs.
+
+\subsection{Partitioning protocols}
+
+All protocols targeted an 80:20 train/test division.
+
+\textbf{Random partition.} Molecules were sampled at the observation level. Classification partitions were stratified when applicable. Random partitions were generated independently for each seed.
+
+\textbf{Ordinary scaffold partition.} Molecules were grouped by Bemis--Murcko scaffold \citep{bemis1996properties}. Complete scaffold groups were assigned by descending group size, with no scaffold shared between training and test sets. This partition was deterministic; seed-to-seed variation therefore came from stochastic predictive models rather than from resampling the molecules.
+
+\textbf{Target-balanced scaffold partition.} Let $G_1,\ldots,G_m$ denote complete scaffold groups and let $S\subseteq\{1,\ldots,m\}$ denote the groups selected for the test set. For a dataset of size $N$, the target test size was $n^{*}=\operatorname{round}(0.2N)$. If $n_S$ and $\bar{y}_S$ are the size and target mean of the selected test set, while $\bar{y}$ and $s_y$ are the full-dataset target mean and standard deviation, the search minimized
+
+\begin{equation}
+J(S)=\frac{|n_S-n^{*}|}{n^{*}}+\frac{|\bar{y}_S-\bar{y}|}{s_y}.
+\label{eq:balanced-objective}
+\end{equation}
+
+The first term penalizes test-size deviation and the second penalizes deviation of the test target mean from the full-dataset mean. Whole scaffold groups were always assigned together, so train/test scaffold overlap was zero. For each seed, 300 stochastic greedy trials were run. At each step, up to 80 remaining scaffold groups were sampled as candidates and the group yielding the smallest provisional objective was added. Selection continued until at least 95\% of the target test size was reached; once selection had begun, candidates producing more than 125\% of the target size were rejected. The lowest-objective trial was retained. This procedure is a diagnostic search, not a claim of globally optimal subset selection.
+
+Twenty fixed seeds were used: 42, 123, 2024, 2026, 3407, 7, 19, 71, 101, 211, 307, 401, 503, 601, 701, 809, 907, 1009, 1201, and 1429. Random and target-balanced protocols include partition variation and model variation; the ordinary scaffold protocol includes only model variation because its molecule assignment is fixed.
+
+\subsection{Split diagnostics}
+
+Each partition was characterized by train and test target means, the absolute train/test target-mean gap, test-set size deviation, scaffold counts, largest-scaffold fraction, singleton-scaffold fraction, and shared-scaffold count. Chemical proximity was measured with maximum test-to-train Tanimoto similarity on Morgan fingerprints: for every test molecule, the maximum similarity to any training molecule was calculated and then summarized within the partition. Model-ranking changes and sensitivity cases were retained because a partition can alter comparative conclusions even when mean scores appear similar.
+
+\subsection{Random-scaffold null audit}
+
+The achieved target balance was compared with a partitioning null model that used no target information. For each dataset, 5,000 random scaffold assignments were generated by randomly ordering scaffold groups and adding complete groups until at least 95\% of the target test size was reached, subject to the same 125\% upper-size rule. For each assignment, the absolute train/test target-mean gap was recorded.
+
+For a target-balanced partition with absolute gap $g_b$, the improvement percentile was defined as
+
+\begin{equation}
+P_b=100\left[1-\frac{1}{5000}\sum_{r=1}^{5000}\mathbb{I}(g_r\leq g_b)\right],
+\label{eq:null-percentile}
+\end{equation}
+
+where $g_r$ is the gap from random scaffold assignment $r$. Thus, $P_b=95$ means that the target-balanced partition achieved a smaller target gap than approximately 95\% of random scaffold assignments.
+
+\subsection{Paired robustness analysis}
+
+For classification, the scaffold generalization gap was random-partition ROC-AUC minus scaffold-partition ROC-AUC. For regression, it was scaffold-partition RMSE minus random-partition RMSE. In both cases, a larger positive gap indicates worse scaffold-partition performance relative to the matched random partition.
+
+For every dataset, model, and seed, the effect of balancing was defined as
+
+\begin{equation}
+\Delta_{\mathrm{reduce}}=\mathrm{Gap}_{\mathrm{ordinary}}-\mathrm{Gap}_{\mathrm{balanced}}.
+\label{eq:gap-reduction}
+\end{equation}
+
+Positive values indicate a smaller generalization gap after target balancing; negative values indicate a larger gap. Mean paired effects were accompanied by percentile bootstrap 95\% confidence intervals based on 5,000 resamples of the 20 seed-level differences. Two-sided Wilcoxon signed-rank tests were applied to the paired differences, followed by Holm correction across the 18 dataset--model comparisons. Target-gap reductions were analysed analogously across datasets. These uncertainty summaries quantify robustness within the fixed benchmark design; they are not interpreted as population-wide inference over all possible chemical datasets.

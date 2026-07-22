@@ -1,0 +1,14 @@
+\subsection{Predictive effects were heterogeneous across datasets and models}
+
+Figure~\ref{fig:robustness} reports the 20-seed paired effect of replacing the ordinary scaffold partition with the target-balanced scaffold partition. Positive values indicate that the random-to-scaffold generalization gap became smaller after balancing; negative values indicate that it became larger. After Holm correction, nine of 18 dataset--model comparisons showed smaller gaps, six showed larger gaps, and three did not provide sufficient evidence for a directional change.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{figure_robustness20_split_effects.pdf}
+\caption{Target-balance efficacy and paired predictive effects. (A) Mean target-balance percentile across 20 target-balanced seeds relative to 5,000 random scaffold assignments; vertical marks show the minimum percentile across seeds. (B,C) Mean paired generalization-gap reduction with bootstrap 95\% confidence intervals for classification and regression datasets. Positive values indicate a smaller target-balanced gap. Filled circles indicate Holm-adjusted significance at the 0.05 level; open squares indicate that the paired Wilcoxon test was not significant after Holm correction.}
+\label{fig:robustness}
+\end{figure}
+
+The direction of the effect depended on both dataset and model. In BBBP, logistic regression and random forest gaps decreased by mean ROC-AUC differences of 0.084 and 0.034, respectively, while the XGBoost change was inconclusive after correction. In ClinTox, logistic regression and random forest gaps decreased by 0.055 and 0.074, whereas the XGBoost gap increased by 0.020. BACE showed no Holm-adjusted change for logistic regression or random forest, but the XGBoost gap increased by 0.020.
+
+The regression datasets showed equally strong model dependence. In ESOL, random forest and XGBoost gaps decreased by 0.503 and 0.603 RMSE units, whereas the ridge-regression gap increased by 0.748. In FreeSolv, all three models showed smaller gaps after balancing, with mean reductions from 0.091 for ridge regression to 1.053 for random forest. HIV moved in the opposite direction: all three classification models showed larger target-balanced gaps, with mean changes from $-0.056$ to $-0.077$ ROC-AUC units. Target balancing therefore changed the validation condition but did not create a consistent performance advantage.
