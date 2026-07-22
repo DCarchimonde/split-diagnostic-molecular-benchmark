@@ -2,27 +2,29 @@
 
 This repository contains the reproducibility package for the manuscript:
 
-**Split-Diagnostic Evaluation of Molecular Property Prediction Benchmarks: Scaffold Effects, Target Shift, and Chemical Similarity in Structure-Property Modelling**
+**Chemometric Diagnosis of Data-Splitting Effects in Molecular Property Prediction Benchmarks**
 
 ## Study purpose
 
-This project audits how train/test splitting protocols affect molecular property prediction benchmarks. The study compares random, ordinary scaffold, and target-balanced scaffold splits across public molecular property datasets, and evaluates how split choice changes target distribution, scaffold composition, test-to-train chemical similarity, performance gaps, and model rankings.
+This project audits how train/test partitioning protocols affect molecular property prediction benchmarks. The study compares random, ordinary scaffold, and target-balanced scaffold partitions across six public classification and regression datasets, and evaluates how partition choice changes target-distribution shift, scaffold composition, test-to-train chemical similarity, generalization gaps, and model rankings.
 
-The goal is not to propose a new molecular predictor or claim state-of-the-art performance. The goal is to make benchmark interpretation more transparent.
+The target-balanced scaffold procedure is used as a diagnostic counterfactual rather than a universal benchmark replacement. It preserves scaffold disjointness while minimizing normalized test-size deviation and target-mean deviation. Its behaviour is evaluated across 20 fixed seeds and compared with 5,000 target-blind random scaffold assignments per dataset.
+
+The goal is not to introduce a new molecular predictor or claim state-of-the-art predictive performance. The goal is to make chemometric model validation and benchmark interpretation more transparent.
 
 ## Repository contents
 
 ```text
-shared_utils/                         Shared data, chemistry, and split utilities
-paper1_leakage_benchmark/scripts/     Reproducibility scripts
-paper1_leakage_benchmark/results/     Generated result tables
-paper1_leakage_benchmark/figures/     Manuscript figures
+shared_utils/                         Shared data, chemistry, metric, and split utilities
+paper1_leakage_benchmark/scripts/     Reproducibility, robustness, and audit scripts
+paper1_leakage_benchmark/results/     Machine-readable result tables and generated figures
+paper1_leakage_benchmark/figures/     Original manuscript figures
 paper1_latex/                         LaTeX manuscript source
 ```
 
 Raw downloaded datasets and trained model artifacts are intentionally not included.
 
-## Reproducibility workflow
+## Main reproducibility workflow
 
 Run from the repository root:
 
@@ -40,20 +42,32 @@ python paper1_leakage_benchmark/scripts/make_paper_figures.py
 python paper1_leakage_benchmark/scripts/make_manuscript_tables.py
 ```
 
-## Main outputs
+## Twenty-seed robustness and null audits
 
-The workflow generates:
+```bash
+python paper1_leakage_benchmark/scripts/balanced_split_null_audit.py --n-seeds 20 --null-draws 5000
+python paper1_leakage_benchmark/scripts/robustness_20seeds.py --n-seeds 20 --bootstrap 5000 --resume
+python paper1_leakage_benchmark/scripts/plot_robustness20_figure.py
+```
 
-- dataset summary tables;
-- split diagnostics;
-- generalization-gap summaries;
-- Tanimoto similarity audits;
-- model-ranking and sensitivity analyses;
-- manuscript figures.
+These scripts generate:
+
+- the 20-seed raw predictive results;
+- seed-paired generalization-gap effects;
+- bootstrap 95% confidence intervals;
+- Wilcoxon signed-rank tests with Holm correction;
+- target-gap robustness summaries;
+- 5,000-draw random-scaffold null distributions;
+- target-balanced improvement percentiles;
+- the paired robustness figure used in the manuscript.
 
 ## Environment
 
 A Python environment with RDKit, scikit-learn, XGBoost, pandas, numpy, matplotlib, and scipy is required. See `requirements.txt` for the core package list.
+
+## Interpretation boundary
+
+The 20 fixed seeds quantify robustness within the six included benchmark datasets. They are not treated as independent chemical populations. Target-balanced scaffold partitioning controls test size and the first moment of the target distribution, but it does not hold chemical composition, higher target moments, or every other source of partition difficulty constant.
 
 ## Citation
 
